@@ -1,0 +1,23 @@
+{
+  "name": "proyecto-api",
+  "version": "1.0.0",
+  "description": "![Logo De Tec](https://scontent.fntr4-1.fna.fbcdn.net/v/t39.30808-6/380601060_757758299495607_8011295658031924273_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=TLnMNtgbSZQAX_rRck1&_nc_ht=scontent.fntr4-1.fna&oh=00_AfD67Hx1QDsr9Fh1u3wivkIyiAA3b0BzBvn0HCZM7nKrsw&oe=656B687E)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsdoc": "^4.0.2",
+    "mysql2": "^3.6.5",
+    "redoc-express": "^2.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-themes": "^1.2.30",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
