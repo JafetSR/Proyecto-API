@@ -1,0 +1,7 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Datos Del Oceano",
+        "version": "1.0.1"
+    }
+}

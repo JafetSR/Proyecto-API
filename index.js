@@ -18,10 +18,77 @@ const DBUSER = process.env.DBUSER || 'root';
 const DBPASSWORD = process.env.DBPASSWORD || 'root';
 const DBPORT = process.env.DBPORT || 3306;
 const DBDATABASE = process.env.DBDATABASE || 3306;
-
+const HOST = process.env.HOST || 'http://localhost:'
 app.use(cors());
 app.use(express.json());
+const def = fs.readFileSync(path.join(__dirname,"./swagger.json"), {encoding: "utf8", flag: "r"});
+const read = fs.readFileSync(path.join(__dirname,"./README.MD"), {encoding: "utf8", flag: "r"});
+const defObj = JSON.parse(def);
+defObj.info.description = read;
+defObj.servers = [{"url":HOST+PORT}];
+const swaggerOptions = {
+    definition : defObj,
+    apis : [path.join(__dirname,"./index.js")]
+}
+const Theme = new SwaggerTheme('v3');
+const option = {
+    explorer: true,
+    customCss: Theme.getBuffer("dark")
+}
+const swaggerDocs = swaggerJsDoc(swaggerOptions);                       //Definicion de mi API
+app.use("/api-docs",swaggerUI.serve,swaggerUI.setup(swaggerDocs, option));
+app.get('/api-docs-redoc', redoc({
+    title: 'API Docs Json',
+    specUrl: '/api-docs-json',
+    redocOptions: {
+        theme: {
+            colors: {
+                primary: {
+                main: '#6EC5AB'
+                }
+            },
+            typography: {
+                fontFamily: `"museo-sans", 'Helvetica Neue', Helvetica, Arial, sans-serif`,
+                fontSize: '15px',
+                lineHeight: '1.5',
+                code: {
+                code: '#87E8C7',
+                backgroundColor: '#4D4D4E'
+                }
+            },
+            menu: {
+                backgroundColor: '#ffffff'
+            }
+        }
+    }
+}));
+app.use("/api-docs-json", (req, res) => {
+    res.json(swaggerDocs);
+})
 
+/**
+ * @swagger
+ * tags:
+ *      name: Oceano
+ *      description: Datos Curiosos Del Oceano En General, Su Flora Y Fauna. 
+ */
+
+/**
+ * @swagger
+ * /oceano:
+ *      get:
+ *          summary: Obtiene todos los datos curiosos
+ *          description: Obtiene un arreglo JSON con todos los datos curiosos del oceano
+ *          tags: 
+ *              - Oceano
+ *          response:
+ *              200:
+ *                  description: JSON Con todos los datos curiosos del oceano
+ *              400:
+ *                  description: "No existen registros"
+ *              500:
+ *                  description: "Error de conexión"
+ */
 app.get('/oceano', async (req, res, next) => {
         try
         {
@@ -40,6 +107,23 @@ app.get('/oceano', async (req, res, next) => {
             next(Error);
         }
     })
+
+/**
+ * @swagger
+ * /oceano/cat/:category:
+ *      get:
+ *          summary: Obtiene todos los datos curiosos del oceano según la categoria solicitada
+ *          description: Obtiene un objeto JSON de los datos curiosos según la categoría establecida (General, Flora o Fauna)
+ *          tags:
+ *              - Oceano
+ *          response:
+ *              200:
+ *                  description: JSON Con todos los datos curiosos del oceano según la categoría
+ *              400:
+ *                  description: "No existen registros para la categoría [category]"
+ *              500:
+ *                  description: "Error de conexión"
+ */
 app.get('/oceano/cat/:category', async (req, res, next) => {
     try
     {
@@ -58,6 +142,23 @@ app.get('/oceano/cat/:category', async (req, res, next) => {
         next(Error)
     }
 });
+
+/**
+ * @swagger
+ * /oceano/ent/entity:
+ *      get:
+ *          summary: Obtiene todos los datos curiosos del oceano según el animal o criatura pedida
+ *          description: Obtiene un objeto JSON de los datos curiosos según la entidad solicitada (Oceano, tiburon, delfin, coral, etc...)
+ *          tags:
+ *              - Oceano
+ *          response:
+ *              200:
+ *                  description: JSON Con todos los datos curiosos del oceano según la entidad
+ *              400:
+ *                  description: "No existen registros para la entidad [entity]"
+ *              500:
+ *                  description: "Error de conexión"
+ */
 app.get('/oceano/ent/:entity', async (req, res, next) => {
     try
     {
@@ -76,6 +177,25 @@ app.get('/oceano/ent/:entity', async (req, res, next) => {
         next(Error)
     }
 });
+
+/**
+ * @swagger
+ * /oceano/random:
+ *      get:
+ *          summary: Obtiene un dato curioso aleatorio
+ *          description: Obtiene un objeto JSON de un dato curioso del oceano de forma aleatoria
+ *          tags:
+ *              - Oceano
+ *          response:
+ *              200:
+ *                  description: JSON Con un dato curioso aleatorio
+ *              400:
+ *                  description: "Error al obtener un dato curioso aleatorio"
+ *              404:
+ *                  description: "No existen registros en la base de datos"
+ *              500:
+ *                  description: "Error de conexión"
+ */
 app.get('/oceano/random', async (req, res, next) => {
     try
     {
@@ -83,7 +203,6 @@ app.get('/oceano/random', async (req, res, next) => {
         const [rows, fields] = await connection.query(`SELECT id FROM oceano`)
         if (rows.length > 0){
             rand = Math.floor(Math.random() * rows.length)
-            console.log(rand);
             const [data, field] = await connection.query('SELECT * FROM oceano WHERE id = ' + rows[rand].id)
             if (data.length > 0){
                 res.status(200).json(data);
@@ -93,7 +212,7 @@ app.get('/oceano/random', async (req, res, next) => {
             }
         }
         else{
-            res.status(400).json({"message":"No existen registros en la base de datos"});
+            res.status(404).json({"message":"No existen registros en la base de datos"});
         }
     }
     catch (Error)
@@ -102,6 +221,36 @@ app.get('/oceano/random', async (req, res, next) => {
         next(Error)
     }
 });
+
+/**
+ * @swagger
+ * /oceano/insert:
+ *      post:
+ *          summary: Inserta un nuevo dato curioso
+ *          description: Ruta con el método POST para insertar un dato curioso, ingresando en el body el dato, la categoría y la entidad
+ *          tags: 
+ *              - Oceano
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                          dato:
+ *                              type: string
+ *                          categoria:
+ *                              type: string
+ *                          entidad:
+ *                              type: string
+ *      response:
+ *          200:
+ *              description: "Registro insertado"
+ *          400:
+ *              description: "No se insertaron los registros"
+ *          500:
+ *              description: "Error de conexión"
+ */
 app.post('/oceano/insert', async (req, res, next) => {
     try
     {
@@ -109,19 +258,49 @@ app.post('/oceano/insert', async (req, res, next) => {
         const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE });
         const [rows, fields] = await connection.query(sent)
         if (rows.affectedRows > 0){
-            res.status(200).json({message:"Registro insertado"});
+            res.status(200).json({"message":"Registro insertado"});
         }
         else{
-            res.status(400).json({message:"No se insertaron los registros"});
+            res.status(400).json({"message":"No se insertaron los registros"});
         }
     }
     catch(Error)
     {
-        // let e = new Error("Error en la ruta POST, revise la conexión a la base de datos.");
         console.log(Error);
         next(Error);
     }
 });
+
+/**
+ * @swagger
+ * /oceano/update?id=id:
+ *      patch:
+ *          summary: Actualiza la información de un alumno
+ *          description: Ruta con el método PATCH para actualizar un nuevo estudiante para ingresarlo en la bd
+ *          tags: 
+ *            - Oceano
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                          dato:
+ *                              type: string
+ *                          categoria:
+ *                              type: string
+ *                          entidad:
+ *                              type: string
+ *      response:
+ *        200:
+ *          description: "Registro Actualizado Correctamente"
+ *        400:
+ *          description: "Registro No Actualizado"
+ *        500:
+ *          description: "Error de conexión"
+ */
+
 app.patch('/oceano/update', async (req, res, next) => {
     try
     {
@@ -144,18 +323,35 @@ app.patch('/oceano/update', async (req, res, next) => {
         console.log(sentencia);
         const [rows, fields] = await connection.query(sentencia);
         if (rows.affectedRows != 0){
-            res.status(200).json({ mensaje : "Registro Actualizado Correctamente"});
+            res.status(200).json({ "message" : "Registro Actualizado Correctamente"});
         }
         else{
-            res.status(400).json({mensaje : "Registro No Actualizado"});
+            res.status(400).json({"message" : "Registro No Actualizado"});
         }
     }
     catch(Error)
     {
-        // let e = new Error("Error en la ruta PATCH, revise la conexión a la base de datos.");
         next(Error);
     }
 });
+
+/**
+ * @swagger
+ * /oceano/delete?id=id:
+ *      delete:
+ *          summary: Elimina el dato curioso de la base de datos
+ *          description: Ruta con el método DELETE para eliminar un dato curioso de la base de datos
+ *          tags: 
+ *              - Oceano
+ *      response:
+ *          200:
+ *              description: "Registro Eliminado Exitosamente."
+ *          400:
+ *              description: "Registro No Existe."
+ *          500:
+ *              description: "Error de conexión"
+ */
+
 app.delete('/oceano/delete', async (req, res, next) => {
     try
     {
@@ -183,3 +379,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, (req, res) => {
     console.log(`Servidor Express escuchando en el puerto ${PORT}`);
 });
+
+module.exports.app = app;
