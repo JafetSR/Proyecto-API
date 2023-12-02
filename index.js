@@ -77,6 +77,27 @@ app.use("/api-docs-json", (req, res) => {
 
 /**
  * @swagger
+ * /:
+ *      get:
+ *          summary: Ruta principal del API
+ *          description: Ruta principal que mostrará una respuesta en JSON para comprobar su correcto funcionamiento
+ *          tags:
+ *              - Oceano
+ *          response:
+ *              200:
+ *                  description: res.Json con mensaje de conexión exitosa a la API
+ *              500:
+ *                  description: Error de conexión
+ */
+app.get('/', (req, res, next) => {
+    try {
+        res.status(200).json({"message":"Conexión Exitosa a la API","test":"Hola mundo"})
+    } catch (error) {
+        next(error)
+    }
+})
+/**
+ * @swagger
  * /oceano:
  *      get:
  *          summary: Obtiene todos los datos curiosos
