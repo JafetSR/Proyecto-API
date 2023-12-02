@@ -20,6 +20,7 @@ const DBPORT = process.env.DBPORT || 3306;
 const DBDATABASE = process.env.DBDATABASE || 3306;
 const HOST = process.env.HOST || 'http://localhost:'
 console.log(HOST + PORT)
+console.log(`host:${DBHOST}, user: ${DBUSER}, password: ${DBPASSWORD}, database: ${DBDATABASE}`)
 app.use(cors());
 app.use(express.json());
 const def = fs.readFileSync("./swagger.json", {encoding: "utf8", flag: "r"});
