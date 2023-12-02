@@ -23,9 +23,9 @@ console.log(HOST + PORT)
 app.use(cors());
 app.use(express.json());
 const def = fs.readFileSync("./swagger.json", {encoding: "utf8", flag: "r"});
-const read = fs.readFileSync("./README.MD", {encoding: "utf8", flag: "r"});
+//const read = fs.readFileSync("./README.MD", {encoding: "utf8", flag: "r"});
 const defObj = JSON.parse(def);
-defObj.info.description = read;
+// defObj.info.description = read;
 defObj.servers = [{"url":HOST+PORT}];
 const swaggerOptions = {
     definition : defObj,
