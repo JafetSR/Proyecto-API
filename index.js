@@ -9,15 +9,15 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const { SwaggerTheme } = require('swagger-themes');
 const redoc = require('redoc-express');
 
-//env.config();
+env.config();
 const app = express();
 
 const PORT = process.env.PORT || 8082;
-const DBHOST = process.env.DBHOST || 'localhost';
-const DBUSER = process.env.DBUSER || 'root';
-const DBPASSWORD = process.env.DBPASSWORD || 'root';
-const DBPORT = process.env.DBPORT || 3306;
-const DBDATABASE = process.env.DBDATABASE || 3306;
+const DBHOST = process.env.MYSQLHOST || 'localhost';
+const DBUSER = process.env.MYSQLUSER || 'root';
+const DBPASSWORD = process.env.MYSQLPASSWORD || 'root';
+const DBPORT = process.env.MYSQLPORT || 3306;
+const DBDATABASE = process.env.MYSQLDATABASE || 'proyectoapi';
 const HOST = process.env.HOST || 'http://localhost:'
 console.log(HOST + PORT)
 console.log(`host:${DBHOST}, user: ${DBUSER}, password: ${DBPASSWORD}, database: ${DBDATABASE}`)
@@ -115,7 +115,7 @@ app.get('/', (req, res, next) => {
 app.get('/oceano', async (req, res, next) => {
         try
         {
-            const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE });
+            const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE, port: DBPORT });
             const [rows, fields] = await connection.query('SELECT * FROM oceano')
             if (rows.length > 0){
                 res.status(200).json(rows);
@@ -150,7 +150,7 @@ app.get('/oceano', async (req, res, next) => {
 app.get('/oceano/cat/:category', async (req, res, next) => {
     try
     {
-        const connection = await mysql.createConnection({ host:DBHOST, user:DBUSER, password:DBPASSWORD, database:DBDATABASE });
+        const connection = await mysql.createConnection({ host:DBHOST, user:DBUSER, password:DBPASSWORD, database:DBDATABASE, port: DBPORT });
         const [rows, fields] = await connection.query(`SELECT * FROM oceano WHERE categoria = '${req.params.category}'`)
         if (rows.length > 0){
             res.status(200).json(rows);
@@ -185,7 +185,7 @@ app.get('/oceano/cat/:category', async (req, res, next) => {
 app.get('/oceano/ent/:entity', async (req, res, next) => {
     try
     {
-        const connection = await mysql.createConnection({ host:DBHOST, user:DBUSER, password:DBPASSWORD, database:DBDATABASE });
+        const connection = await mysql.createConnection({ host:DBHOST, user:DBUSER, password:DBPASSWORD, database:DBDATABASE, port: DBPORT });
         const [rows, fields] = await connection.query(`SELECT * FROM oceano WHERE entidad = '${req.params.entity}'`)
         if (rows.length > 0){
             res.status(200).json(rows);
@@ -222,7 +222,7 @@ app.get('/oceano/ent/:entity', async (req, res, next) => {
 app.get('/oceano/random', async (req, res, next) => {
     try
     {
-        const connection = await mysql.createConnection({ host:DBHOST, user:DBUSER, password:DBPASSWORD, database:DBDATABASE });
+        const connection = await mysql.createConnection({ host:DBHOST, user:DBUSER, password:DBPASSWORD, database:DBDATABASE, port: DBPORT });
         const [rows, fields] = await connection.query(`SELECT id FROM oceano`)
         if (rows.length > 0){
             rand = Math.floor(Math.random() * rows.length)
@@ -278,7 +278,7 @@ app.post('/oceano/insert', async (req, res, next) => {
     try
     {
         let sent = `INSERT INTO oceano(dato, categoria, entidad) Values('${req.body.dato}', '${req.body.categoria}', '${req.body.entidad}')`;
-        const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE });
+        const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE, port: DBPORT });
         const [rows, fields] = await connection.query(sent)
         if (rows.affectedRows > 0){
             res.status(200).json({"message":"Registro insertado"});
@@ -327,7 +327,7 @@ app.post('/oceano/insert', async (req, res, next) => {
 app.patch('/oceano/update', async (req, res, next) => {
     try
     {
-        const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE })
+        const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE, port: DBPORT })
         let objeto = req.body;
         let campos = Object.keys(objeto);
         let sentencia = "UPDATE oceano SET ";
@@ -379,7 +379,7 @@ app.delete('/oceano/delete', async (req, res, next) => {
     try
     {
         console.log(req.query);
-        const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE });
+        const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE, port: DBPORT });
         const [rows, fields] = await connection.query('DELETE FROM oceano WHERE id = '+ req.query.id);
         if (rows.affectedRows != 0){
             res.status(200).json({mensaje: "Registro Eliminado Exitosamente."});
