@@ -9,7 +9,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const { SwaggerTheme } = require('swagger-themes');
 const redoc = require('redoc-express');
 
-env.config();
+//env.config();
 const app = express();
 
 const PORT = process.env.PORT || 8082;
@@ -19,10 +19,11 @@ const DBPASSWORD = process.env.DBPASSWORD || 'root';
 const DBPORT = process.env.DBPORT || 3306;
 const DBDATABASE = process.env.DBDATABASE || 3306;
 const HOST = process.env.HOST || 'http://localhost:'
+console.log(HOST + PORT)
 app.use(cors());
 app.use(express.json());
-const def = fs.readFileSync(path.join(__dirname,"./swagger.json"), {encoding: "utf8", flag: "r"});
-const read = fs.readFileSync(path.join(__dirname,"./README.MD"), {encoding: "utf8", flag: "r"});
+const def = fs.readFileSync("./swagger.json", {encoding: "utf8", flag: "r"});
+const read = fs.readFileSync("./README.MD", {encoding: "utf8", flag: "r"});
 const defObj = JSON.parse(def);
 defObj.info.description = read;
 defObj.servers = [{"url":HOST+PORT}];
