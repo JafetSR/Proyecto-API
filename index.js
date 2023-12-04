@@ -138,7 +138,7 @@ app.get('/oceano', async (req, res, next) => {
  *          summary: Obtiene todos los datos curiosos del oceano según la categoria solicitada
  *          description: Obtiene un objeto JSON de los datos curiosos según la categoría establecida (General, Flora o Fauna)
  *          parameters:
- *              - in: /oceano
+ *              - in: /oceano/cat
  *                name: category
  *                schema:
  *                  type: string
@@ -180,7 +180,7 @@ app.get('/oceano/cat/:category', async (req, res, next) => {
  *          summary: Obtiene todos los datos curiosos del oceano según el animal o criatura pedida
  *          description: Obtiene un objeto JSON de los datos curiosos según la entidad solicitada (Oceano, tiburon, delfin, coral, etc...)
  *          parameters:
- *              - in: /oceano
+ *              - in: /oceano/ent
  *                name: entity
  *                schema:
  *                  type: string
