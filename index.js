@@ -302,6 +302,8 @@ app.post('/oceano/insert', async (req, res, next) => {
  *          description: Ruta con el método PATCH para actualizar un nuevo estudiante para ingresarlo en la bd
  *          tags: 
  *            - Oceano
+ *          parameters:
+ *              id
  *          requestBody:
  *              required: true
  *              content:
@@ -309,12 +311,12 @@ app.post('/oceano/insert', async (req, res, next) => {
  *                      schema:
  *                          type: object
  *                          properties:
- *                          dato:
- *                              type: string
- *                          categoria:
- *                              type: string
- *                          entidad:
- *                              type: string
+ *                              dato:
+ *                                  type: string
+ *                              categoria:
+ *                                  type: string
+ *                              entidad:
+ *                                  type: string
  *      response:
  *        200:
  *          description: "Registro Actualizado Correctamente"
@@ -366,6 +368,8 @@ app.patch('/oceano/update', async (req, res, next) => {
  *          description: Ruta con el método DELETE para eliminar un dato curioso de la base de datos
  *          tags: 
  *              - Oceano
+ *          parameters:
+ *              id
  *      response:
  *          200:
  *              description: "Registro Eliminado Exitosamente."
