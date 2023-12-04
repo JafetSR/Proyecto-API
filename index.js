@@ -168,7 +168,7 @@ app.get('/oceano/cat/:category', async (req, res, next) => {
 
 /**
  * @swagger
- * /oceano/ent/entity:
+ * /oceano/ent/:entity:
  *      get:
  *          summary: Obtiene todos los datos curiosos del oceano según el animal o criatura pedida
  *          description: Obtiene un objeto JSON de los datos curiosos según la entidad solicitada (Oceano, tiburon, delfin, coral, etc...)
@@ -260,12 +260,12 @@ app.get('/oceano/random', async (req, res, next) => {
  *                      schema:
  *                          type: object
  *                          properties:
- *                          dato:
- *                              type: string
- *                          categoria:
- *                              type: string
- *                          entidad:
- *                              type: string
+ *                              dato:
+ *                                  type: string
+ *                              categoria:
+ *                                  type: string
+ *                              entidad:
+ *                                  type: string
  *      response:
  *          200:
  *              description: "Registro insertado"
