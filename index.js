@@ -137,6 +137,13 @@ app.get('/oceano', async (req, res, next) => {
  *      get:
  *          summary: Obtiene todos los datos curiosos del oceano según la categoria solicitada
  *          description: Obtiene un objeto JSON de los datos curiosos según la categoría establecida (General, Flora o Fauna)
+ *          parameters:
+ *              - in: /oceano
+ *                name: category
+ *                schema:
+ *                  type: string
+ *                required: true
+ *                description: Filtra los registros por categoría (General, flora o fauna).
  *          tags:
  *              - Oceano
  *          response:
@@ -172,6 +179,13 @@ app.get('/oceano/cat/:category', async (req, res, next) => {
  *      get:
  *          summary: Obtiene todos los datos curiosos del oceano según el animal o criatura pedida
  *          description: Obtiene un objeto JSON de los datos curiosos según la entidad solicitada (Oceano, tiburon, delfin, coral, etc...)
+ *          parameters:
+ *              - in: /oceano
+ *                name: entity
+ *                schema:
+ *                  type: string
+ *                required: true
+ *                description: Filtra los registros por la entidad ingresada (tiburon, delfin, coral, etc.).
  *          tags:
  *              - Oceano
  *          response:
@@ -247,7 +261,7 @@ app.get('/oceano/random', async (req, res, next) => {
 
 /**
  * @swagger
- * /oceano/insert:
+ * /oceano:
  *      post:
  *          summary: Inserta un nuevo dato curioso
  *          description: Ruta con el método POST para insertar un dato curioso, ingresando en el body el dato, la categoría y la entidad
@@ -274,7 +288,7 @@ app.get('/oceano/random', async (req, res, next) => {
  *          500:
  *              description: "Error de conexión"
  */
-app.post('/oceano/insert', async (req, res, next) => {
+app.post('/oceano', async (req, res, next) => {
     try
     {
         let sent = `INSERT INTO oceano(dato, categoria, entidad) Values('${req.body.dato}', '${req.body.categoria}', '${req.body.entidad}')`;
@@ -296,14 +310,19 @@ app.post('/oceano/insert', async (req, res, next) => {
 
 /**
  * @swagger
- * /oceano/update?id=id:
+ * /oceano?id=id:
  *      patch:
  *          summary: Actualiza la información de un alumno
  *          description: Ruta con el método PATCH para actualizar un nuevo estudiante para ingresarlo en la bd
+ *          parameters:
+ *              - in: /oceano
+ *                name: id
+ *                schema:
+ *                  type: integer
+ *                required: true
+ *                description: Id del registro a actualizar
  *          tags: 
  *            - Oceano
- *          parameters:
- *              id
  *          requestBody:
  *              required: true
  *              content:
@@ -326,7 +345,7 @@ app.post('/oceano/insert', async (req, res, next) => {
  *          description: "Error de conexión"
  */
 
-app.patch('/oceano/update', async (req, res, next) => {
+app.patch('/oceano', async (req, res, next) => {
     try
     {
         const connection = await mysql.createConnection({ host:DBHOST, user: DBUSER, password: DBPASSWORD, database: DBDATABASE, port: DBPORT })
@@ -362,10 +381,17 @@ app.patch('/oceano/update', async (req, res, next) => {
 
 /**
  * @swagger
- * /oceano/delete?id=id:
+ * /oceano?id=id:
  *      delete:
  *          summary: Elimina el dato curioso de la base de datos
  *          description: Ruta con el método DELETE para eliminar un dato curioso de la base de datos
+ *          parameters:
+ *              - in: /oceano
+ *                name: id
+ *                schema:
+ *                  type: integer
+ *                required: true
+ *                description: Id del registro a eliminar
  *          tags: 
  *              - Oceano
  *          parameters:
@@ -379,7 +405,7 @@ app.patch('/oceano/update', async (req, res, next) => {
  *              description: "Error de conexión"
  */
 
-app.delete('/oceano/delete', async (req, res, next) => {
+app.delete('/oceano', async (req, res, next) => {
     try
     {
         console.log(req.query);
