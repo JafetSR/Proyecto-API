@@ -394,8 +394,6 @@ app.patch('/oceano', async (req, res, next) => {
  *                description: Id del registro a eliminar
  *          tags: 
  *              - Oceano
- *          parameters:
- *              id
  *      response:
  *          200:
  *              description: "Registro Eliminado Exitosamente."
