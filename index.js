@@ -138,7 +138,7 @@ app.get('/oceano', async (req, res, next) => {
  *          summary: Obtiene todos los datos curiosos del oceano según la categoria solicitada
  *          description: Obtiene un objeto JSON de los datos curiosos según la categoría establecida (General, Flora o Fauna)
  *          parameters:
- *              - in: /oceano/cat
+ *              - in: /oceano/cat/
  *                name: category
  *                schema:
  *                  type: string
@@ -180,7 +180,7 @@ app.get('/oceano/cat/:category', async (req, res, next) => {
  *          summary: Obtiene todos los datos curiosos del oceano según el animal o criatura pedida
  *          description: Obtiene un objeto JSON de los datos curiosos según la entidad solicitada (Oceano, tiburon, delfin, coral, etc...)
  *          parameters:
- *              - in: /oceano/ent
+ *              - in: /oceano/ent/
  *                name: entity
  *                schema:
  *                  type: string
@@ -315,7 +315,7 @@ app.post('/oceano', async (req, res, next) => {
  *          summary: Actualiza la información de un alumno
  *          description: Ruta con el método PATCH para actualizar un nuevo estudiante para ingresarlo en la bd
  *          parameters:
- *              - in: /oceano
+ *              - in: /oceano?id=
  *                name: id
  *                schema:
  *                  type: integer
@@ -386,7 +386,7 @@ app.patch('/oceano', async (req, res, next) => {
  *          summary: Elimina el dato curioso de la base de datos
  *          description: Ruta con el método DELETE para eliminar un dato curioso de la base de datos
  *          parameters:
- *              - in: /oceano
+ *              - in: /oceano?id=
  *                name: id
  *                schema:
  *                  type: integer
